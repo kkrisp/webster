@@ -30,6 +30,7 @@ class World(tk.Frame):
         self.bind("<KeyPress>", lambda e: self.Keydown_action(e))
         self.bind("<KeyRelease>", lambda e: self.Keyup_action(e))
 
+        self.objects = []
         
         self.canvas=tk.Canvas(self, width=p_width, height=p_height)
         self.canvas.pack()
@@ -64,18 +65,24 @@ class World(tk.Frame):
             self.player.status_move = "move"
             self.player.direction = "right"
         elif (e.char == 'h'): # right
-            self.create_web()
+            self.create_line()
         else:
             print("{} ({}) not programmed".format(e.char, ord(e.char)))
     
     def Keyup_action(self, e):
-        print("{} ({}) released".format(e.char, ord(e.char)))
+        #print("{} ({}) released".format(e.char, ord(e.char)))
         self.player.status_move = "stop"
     
     def refresh(self):
         self.clear()
         self.player.draw()
+        for single_asset in self.objects:
+            single_asset.draw()
 
     def clear(self):
         self.canvas.delete("all")
+
+    def create_line(self):
+        self.objects.append(assets.Surface(self.canvas, geometry.Point(10, 10), geometry.Point(self.player.position.x, self.player.position.y)))
+        print("Num of assets:", len(self.objects))
 

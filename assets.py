@@ -76,3 +76,14 @@ class Player(Asset):
     def draw(self):
         #return super().draw()
         self.root_canvas.create_circle(self.position.x, self.position.y, self.size)
+
+
+class Surface(Asset):
+    def __init__(self, p_root_canvas, point_A, point_B):
+        Asset.__init__(self, p_root_canvas)
+        self.line = geometry.Line()
+        self.line.set_new_start_point(point_A)
+        self.line.set_new_end_point(point_B)
+    
+    def draw(self):
+        self.root_canvas.create_line(self.line.start_point.x,self.line.start_point.y,self.line.end_point.x,self.line.end_point.y, fill="#aaaaaa", width=3)
