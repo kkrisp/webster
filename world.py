@@ -39,17 +39,17 @@ class World(tk.Frame):
         
         self.player.position = geometry.Point(20, 20)
         
-    def Init(self):
+    def init(self):
         self.pack()
         self.focus_set()
         self.ticker.tick()
 
-    def Timed_action(self, counter):
+    def timed_action(self, counter):
         #print("Tick", counter)
         self.player.step()
         self.refresh()
     
-    def Keydown_action(self, e):
+    def keydown_action(self, e):
         #print("{} ({}) pressed".format(e.char, ord(e.char)))
         #print ("down", e.char, self.line_x1)
         if (e.char == 'w'):  # up
@@ -69,7 +69,7 @@ class World(tk.Frame):
         else:
             print("{} ({}) not programmed".format(e.char, ord(e.char)))
     
-    def Keyup_action(self, e):
+    def keyup_action(self, e):
         #print("{} ({}) released".format(e.char, ord(e.char)))
         self.player.status_move = "stop"
     
