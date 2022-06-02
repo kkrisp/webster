@@ -35,15 +35,16 @@ class World(tk.Frame):
         self.canvas=tk.Canvas(self, width=p_width, height=p_height)
         self.canvas.pack()
         
-        self.ground = assets.Surface(self.canvas, geometry.Point(100, 300), geometry.Point(650, 300))
+        self.ground = assets.Surface(self.canvas, geometry.Point(10, 200), geometry.Point(650, 200))
         self.ground.color = "#476a3f"
         self.ground.width = 4
 
-        self.player = assets.Player(self.canvas, p_size = 10, p_surface = self.ground)
-        #self.player = assets.Player(self.canvas, p_size = 10)
         
-        self.player.position = geometry.Point(10, 300)
-        #self.player.position = geometry.Point(20, 20)
+        self.wall = assets.Surface(self.canvas, geometry.Point(300, 10), geometry.Point(300, 300))
+        self.wall.color = "#476a3f"
+        self.wall.width = 4
+
+        self.player = assets.Player(self.canvas, p_size = 10, p_surface = self.ground)
 
         self.line_in_progress = None
 
@@ -51,6 +52,8 @@ class World(tk.Frame):
         self.pack()
         self.focus_set()
         self.ticker.tick()
+        
+        self.player.put_on_surface(self.player.surface)
 
     def timed_action(self, counter):
         #print("Tick", counter)
@@ -74,6 +77,8 @@ class World(tk.Frame):
             self.player.direction = "right"
         elif (e.char == 'h'): # right
             self.create_line()
+        elif (e.char == 'h'): # right
+            self.player.put_on_surface()
         else:
             print("{} ({}) not programmed".format(e.char, ord(e.char)))
     
@@ -84,6 +89,7 @@ class World(tk.Frame):
     def refresh(self):
         self.clear()
         self.ground.draw()
+        self.wall.draw()
         self.player.draw()
 
         if (self.line_in_progress): self.line_in_progress.draw_with_endpoint(self.player.position)

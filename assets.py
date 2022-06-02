@@ -107,7 +107,25 @@ class Player(Asset):
             elif (self.direction == "right" and x_step != 0):
                 self.position.y += y_step
                 self.position.x -= x_step
+    
+    #TODO: if no surface given, use self.surface
+    #TODO: currently moves the player in y (vertical) distance only, maybe do shortest distance
+    def put_on_surface(self, p_surface = None):
+        """Changes the player position to the closest point on the surface"""
+        if (p_surface == None): p_surface = self.surface
 
+        y_calculated = p_surface.line.y_value_at_given_x(self.position.x)
+        if (y_calculated != None):
+            self.position.y = y_calculated
+            self.surface = p_surface
+        else:
+            print("Player is not over the line {} >> {} << {}".format(p_surface.line.start_point.x, self.position.x, p_surface.line.end_point.x))
+    
+    def select_and_put_on_surface(self, p_surfaces):
+        """Changes the player position to the closest point on the surface"""
+        for surface in p_surfaces:
+            if geometry.is_point_near_a_line(self.position, surface.line, 10):
+                self.put_on_surface(surface)
 
 
 class Surface(Asset):
@@ -152,5 +170,10 @@ class Surface(Asset):
 
     def draw_with_endpoint(self, point_B):
         if (self.point_A_exists):
-            self.root_canvas.create_line(self.line.start_point.x,self.line.start_point.y,point_B.x,point_B.y, fill="#75aebd", width=3)
+            self.root_canvas.create_line(
+                self.line.start_point.x,
+                self.line.start_point.y,
+                point_B.x,
+                point_B.y,
+                fill="#75aebd", width=3)
 

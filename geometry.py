@@ -116,7 +116,6 @@ class Line:
 
         return slice_x, slice_y
 
-
 def is_point_near_a_line(current_point, current_line, threshold):
     #using the larger projection to calculate the position more precisely
     #TODO: selecting larger projection might bz told from the angle
