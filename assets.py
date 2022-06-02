@@ -87,28 +87,22 @@ class Player(Asset):
     def surface_step(self):
         if (self.status_move != "stop"):
             x_step, y_step = self.surface.line.slice_coordinates(self.speed_pixel_per_tick)
-            next_position = geometry.Point()
+            next_position = geometry.Point(self.position.x, self.position.y)
 
             if (self.direction == "up" and y_step != 0):
                 if (self.surface.line.cos < 0):
-                    next_position.y = self.position.y + y_step
-                    next_position.x = self.position.x - x_step
+                    next_position.move(-x_step, +y_step)
                 else:
-                    next_position.y = self.position.y - y_step
-                    next_position.x = self.position.x + x_step
+                    next_position.move(+x_step, -y_step)
             elif (self.direction == "down" and y_step != 0):
                 if (self.surface.line.cos < 0):
-                    next_position.y = self.position.y - y_step
-                    next_position.x = self.position.x + x_step
+                    next_position.move(+x_step, -y_step)
                 else:
-                    next_position.y = self.position.y + y_step
-                    next_position.x = self.position.x - x_step
+                    next_position.move(-x_step, +y_step)
             elif (self.direction == "left" and x_step != 0):
-                next_position.y = self.position.y - y_step
-                next_position.x = self.position.x + x_step
+                next_position.move(+x_step, -y_step)
             elif (self.direction == "right" and x_step != 0):
-                next_position.y = self.position.y + y_step
-                next_position.x = self.position.x - x_step
+                next_position.move(-x_step, +y_step)
 
             if (    self.surface.line.x_value_valid(next_position.x)
                 and self.surface.line.y_value_valid(next_position.y) ):

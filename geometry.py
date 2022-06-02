@@ -29,6 +29,10 @@ class Point:
     def __init__(self, x_init=0, y_init=0):
         self.x = x_init
         self.y = y_init
+    
+    def move(self, distance_x, distance_y):
+        self.x += distance_x
+        self.y += distance_y
 
 
 class Line:
