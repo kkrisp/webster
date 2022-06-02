@@ -34,13 +34,19 @@ class World(tk.Frame):
         
         self.canvas=tk.Canvas(self, width=p_width, height=p_height)
         self.canvas.pack()
-
-        self.player = assets.Player(self.canvas, 10)
         
-        self.player.position = geometry.Point(20, 20)
+        self.ground = assets.Surface(self.canvas, geometry.Point(100, 300), geometry.Point(650, 300))
+        self.ground.color = "#476a3f"
+        self.ground.width = 4
+
+        self.player = assets.Player(self.canvas, p_size = 10, p_surface = self.ground)
+        #self.player = assets.Player(self.canvas, p_size = 10)
+        
+        self.player.position = geometry.Point(10, 300)
+        #self.player.position = geometry.Point(20, 20)
 
         self.line_in_progress = None
-        
+
     def init(self):
         self.pack()
         self.focus_set()
@@ -77,7 +83,9 @@ class World(tk.Frame):
     
     def refresh(self):
         self.clear()
+        self.ground.draw()
         self.player.draw()
+
         if (self.line_in_progress): self.line_in_progress.draw_with_endpoint(self.player.position)
         for single_asset in self.objects:
             single_asset.draw()

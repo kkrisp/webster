@@ -51,9 +51,10 @@ class Asset():
 
 
 class Player(Asset):
-    def __init__(self, p_root_canvas, p_size=30, p_speed_pixlel_per_tick=10):
+    def __init__(self, p_root_canvas, p_size=30, p_speed_pixlel_per_tick=10, p_surface=None):
         Asset.__init__(self, p_root_canvas)
-        
+        self.surface = p_surface # surface, the player stands on
+
         self.size = p_size
         self.speed_pixel_per_tick = p_speed_pixlel_per_tick
         
@@ -63,6 +64,12 @@ class Player(Asset):
         self.direction = "right"
 
     def step(self):
+        if (self.surface is None):
+            self.free_step()
+        else:
+            self.surface_step()
+
+    def free_step(self):
         if (self.status_move != "stop"):
             if (self.direction == "up"):
                 self.position.y -= self.speed_pixel_per_tick
@@ -75,13 +82,42 @@ class Player(Asset):
 
     def draw(self):
         #return super().draw()
-        self.root_canvas.create_circle(self.position.x, self.position.y, self.size)
+        self.root_canvas.create_circle(math.ceil(self.position.x), math.ceil(self.position.y), self.size)
+
+    def surface_step(self):
+        if (self.status_move != "stop"):
+            x_step, y_step = self.surface.line.slice_coordinates(self.speed_pixel_per_tick)
+            if (self.direction == "up" and y_step != 0):
+                if (self.surface.line.cos < 0):
+                    self.position.y += y_step
+                    self.position.x -= x_step
+                else:
+                    self.position.y -= y_step
+                    self.position.x += x_step
+            elif (self.direction == "down" and y_step != 0):
+                if (self.surface.line.cos < 0):
+                    self.position.y -= y_step
+                    self.position.x += x_step
+                else:
+                    self.position.y += y_step
+                    self.position.x -= x_step
+            elif (self.direction == "left" and x_step != 0):
+                self.position.y -= y_step
+                self.position.x += x_step
+            elif (self.direction == "right" and x_step != 0):
+                self.position.y += y_step
+                self.position.x -= x_step
+
 
 
 class Surface(Asset):
     def __init__(self, p_root_canvas, point_A=None, point_B=None):
         Asset.__init__(self, p_root_canvas)
         self.line = geometry.Line()
+
+        self.color = "#aaaaaa"
+        self.width = 3
+
         self.point_A_exists = False
         self.point_B_exists = False
         if (point_A != None):
@@ -99,7 +135,12 @@ class Surface(Asset):
     
     def draw(self):
         if (self.point_A_exists and self.point_B_exists):
-            self.root_canvas.create_line(self.line.start_point.x,self.line.start_point.y,self.line.end_point.x,self.line.end_point.y, fill="#aaaaaa", width=2)
+            self.root_canvas.create_line(
+                math.ceil(self.line.start_point.x),
+                math.ceil(self.line.start_point.y),
+                math.ceil(self.line.end_point.x),
+                math.ceil(self.line.end_point.y),
+                fill=self.color, width=self.width)
 
     def add_start_point(self, point_A):
         self.line.set_new_start_point(point_A)
@@ -112,3 +153,4 @@ class Surface(Asset):
     def draw_with_endpoint(self, point_B):
         if (self.point_A_exists):
             self.root_canvas.create_line(self.line.start_point.x,self.line.start_point.y,point_B.x,point_B.y, fill="#75aebd", width=3)
+

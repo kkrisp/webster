@@ -43,6 +43,7 @@ class Line:
             self.end_point.y = end_point.y
         self.projection_length_x, self.projection_length_y = self.calculate_x_y_projection_length()
         self.length = self.calculate_length()
+        
         self.sin = 0.0
         self.cos = 1.0
         self.tan = 0.0
@@ -101,6 +102,19 @@ class Line:
             return x + self.start_point.x
         else:
             return None
+    
+    def slice_coordinates(self, slice_length):
+        if (abs(slice_length * self.sin) > MIN_LIM):
+            slice_x = -slice_length * self.sin
+        else:
+            slice_x = 0
+        
+        if (abs(slice_length * self.cos) > MIN_LIM):
+            slice_y = slice_length * self.cos
+        else:
+            slice_y = 0
+
+        return slice_x, slice_y
 
 
 def is_point_near_a_line(current_point, current_line, threshold):
