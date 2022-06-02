@@ -79,11 +79,36 @@ class Player(Asset):
 
 
 class Surface(Asset):
-    def __init__(self, p_root_canvas, point_A, point_B):
+    def __init__(self, p_root_canvas, point_A=None, point_B=None):
         Asset.__init__(self, p_root_canvas)
         self.line = geometry.Line()
-        self.line.set_new_start_point(point_A)
-        self.line.set_new_end_point(point_B)
+        self.point_A_exists = False
+        self.point_B_exists = False
+        if (point_A != None):
+            self.add_start_point(point_A)
+        if (point_B != None):
+            self.add_end_point(point_B)
+    
+    def copy(self, p_surface):
+        Asset.__init__(self, p_surface.root_canvas)
+        self.line = geometry.Line()
+        if (p_surface.point_A_exists):
+            self.add_start_point(p_surface.line.start_point)
+        if (p_surface.point_B_exists):
+            self.add_end_point(p_surface.line.end_point)
     
     def draw(self):
-        self.root_canvas.create_line(self.line.start_point.x,self.line.start_point.y,self.line.end_point.x,self.line.end_point.y, fill="#aaaaaa", width=3)
+        if (self.point_A_exists and self.point_B_exists):
+            self.root_canvas.create_line(self.line.start_point.x,self.line.start_point.y,self.line.end_point.x,self.line.end_point.y, fill="#aaaaaa", width=2)
+
+    def add_start_point(self, point_A):
+        self.line.set_new_start_point(point_A)
+        self.point_A_exists = True
+
+    def add_end_point(self, point_B):
+        self.line.set_new_end_point(point_B)
+        self.point_B_exists = True
+
+    def draw_with_endpoint(self, point_B):
+        if (self.point_A_exists):
+            self.root_canvas.create_line(self.line.start_point.x,self.line.start_point.y,point_B.x,point_B.y, fill="#75aebd", width=3)

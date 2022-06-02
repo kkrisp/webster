@@ -38,6 +38,8 @@ class World(tk.Frame):
         self.player = assets.Player(self.canvas, 10)
         
         self.player.position = geometry.Point(20, 20)
+
+        self.line_in_progress = None
         
     def init(self):
         self.pack()
@@ -76,6 +78,7 @@ class World(tk.Frame):
     def refresh(self):
         self.clear()
         self.player.draw()
+        if (self.line_in_progress): self.line_in_progress.draw_with_endpoint(self.player.position)
         for single_asset in self.objects:
             single_asset.draw()
 
@@ -83,6 +86,11 @@ class World(tk.Frame):
         self.canvas.delete("all")
 
     def create_line(self):
-        self.objects.append(assets.Surface(self.canvas, geometry.Point(10, 10), geometry.Point(self.player.position.x, self.player.position.y)))
-        print("Num of assets:", len(self.objects))
+        if (self.line_in_progress is None):
+            self.line_in_progress = assets.Surface(self.canvas)
+            self.line_in_progress.add_start_point(geometry.Point(self.player.position.x, self.player.position.y))
+        else:
+            self.line_in_progress.add_end_point(geometry.Point(self.player.position.x, self.player.position.y))
+            self.objects.append(self.line_in_progress)
+            self.line_in_progress = None
 
