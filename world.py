@@ -42,7 +42,7 @@ class World(tk.Frame):
         self.ground.width = 4
 
         
-        self.wall = assets.Surface(self.next_object_id, self.canvas, geometry.Point(10, 10), geometry.Point(300, 300))
+        self.wall = assets.Surface(self.next_object_id, self.canvas, geometry.Point(200, 10), geometry.Point(300, 300))
         self.next_object_id += 1
         self.wall.color = "#476a3f"
         self.wall.width = 4

@@ -89,15 +89,21 @@ class Line:
         else:
             self.ctan = self.projection_length_x / self.projection_length_y
 
+    def x_value_valid(self, x):
+        return self.start_point.x <= x <= self.end_point.x or self.start_point.x >= x >= self.end_point.x
+    
+    def y_value_valid(self, y):
+        return self.start_point.y <= y <= self.end_point.y or self.start_point.y >= y >= self.end_point.y
+
     def y_value_at_given_x(self, x):
-        if self.start_point.x <= x <= self.end_point.x or self.start_point.x >= x >= self.end_point.x:
+        if self.x_value_valid(x):
             y = (x-self.start_point.x) * self.tan
             return y + self.start_point.y
         else:
             return None
 
     def x_value_at_given_y(self, y):
-        if self.start_point.y <= y <= self.end_point.y or self.start_point.y >= y >= self.end_point.y:
+        if self.y_value_valid(y):
             x = (y-self.start_point.y) * self.ctan
             return x + self.start_point.x
         else:
