@@ -30,19 +30,25 @@ class World(tk.Frame):
         self.bind("<KeyPress>", lambda e: self.keydown_action(e))
         self.bind("<KeyRelease>", lambda e: self.keyup_action(e))
 
-        self.objects = []
+        self.climbable_objects = []
+        self.next_object_id = 0
         
         self.canvas=tk.Canvas(self, width=p_width, height=p_height)
         self.canvas.pack()
         
-        self.ground = assets.Surface(self.canvas, geometry.Point(10, 200), geometry.Point(650, 200))
+        self.ground = assets.Surface(self.next_object_id, self.canvas, geometry.Point(10, 200), geometry.Point(650, 200))
+        self.next_object_id += 1
         self.ground.color = "#476a3f"
         self.ground.width = 4
 
         
-        self.wall = assets.Surface(self.canvas, geometry.Point(300, 10), geometry.Point(300, 300))
+        self.wall = assets.Surface(self.next_object_id, self.canvas, geometry.Point(10, 10), geometry.Point(300, 300))
+        self.next_object_id += 1
         self.wall.color = "#476a3f"
         self.wall.width = 4
+        
+        self.climbable_objects.append(self.wall)
+        self.climbable_objects.append(self.ground)
 
         self.player = assets.Player(self.canvas, p_size = 10, p_surface = self.ground)
 
@@ -75,10 +81,10 @@ class World(tk.Frame):
         elif (e.char == 'd'): # right
             self.player.status_move = "move"
             self.player.direction = "right"
-        elif (e.char == 'h'): # right
+        elif (e.char == 'k'): # right
             self.create_line()
-        elif (e.char == 'h'): # right
-            self.player.put_on_surface()
+        elif (e.char == 'l'): # right
+            self.player.select_and_put_on_surface(self.climbable_objects)
         else:
             print("{} ({}) not programmed".format(e.char, ord(e.char)))
     
@@ -89,11 +95,10 @@ class World(tk.Frame):
     def refresh(self):
         self.clear()
         self.ground.draw()
-        self.wall.draw()
         self.player.draw()
 
         if (self.line_in_progress): self.line_in_progress.draw_with_endpoint(self.player.position)
-        for single_asset in self.objects:
+        for single_asset in self.climbable_objects:
             single_asset.draw()
 
     def clear(self):
@@ -101,10 +106,11 @@ class World(tk.Frame):
 
     def create_line(self):
         if (self.line_in_progress is None):
-            self.line_in_progress = assets.Surface(self.canvas)
+            self.line_in_progress = assets.Surface(self.next_object_id, self.canvas)
+            self.next_object_id += 1
             self.line_in_progress.add_start_point(geometry.Point(self.player.position.x, self.player.position.y))
         else:
             self.line_in_progress.add_end_point(geometry.Point(self.player.position.x, self.player.position.y))
-            self.objects.append(self.line_in_progress)
+            self.climbable_objects.append(self.line_in_progress)
             self.line_in_progress = None
 

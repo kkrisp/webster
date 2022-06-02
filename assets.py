@@ -124,13 +124,17 @@ class Player(Asset):
     def select_and_put_on_surface(self, p_surfaces):
         """Changes the player position to the closest point on the surface"""
         for surface in p_surfaces:
-            if geometry.is_point_near_a_line(self.position, surface.line, 10):
+            print(surface.id, self.surface.id)
+            if (surface.id != self.surface.id and geometry.is_point_near_a_line(self.position, surface.line, 10)):
                 self.put_on_surface(surface)
+                break
 
 
 class Surface(Asset):
-    def __init__(self, p_root_canvas, point_A=None, point_B=None):
+    def __init__(self, p_id, p_root_canvas, point_A=None, point_B=None):
         Asset.__init__(self, p_root_canvas)
+        self.id = p_id
+
         self.line = geometry.Line()
 
         self.color = "#aaaaaa"
