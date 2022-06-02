@@ -26,9 +26,9 @@ class World(tk.Frame):
     #def __init__(self, *args, position_manager, **kwargs):
     def __init__(self, p_root, p_width=500, p_height=100, p_tick_length_ms = 1000, p_time_limit_sec = 10):
         tk.Frame.__init__(self, p_root, width=p_width, height=p_height)
-        self.ticker = Ticker(p_root, self.Timed_action, p_tick_length_ms, p_time_limit_sec)
-        self.bind("<KeyPress>", lambda e: self.Keydown_action(e))
-        self.bind("<KeyRelease>", lambda e: self.Keyup_action(e))
+        self.ticker = Ticker(p_root, self.timed_action, p_tick_length_ms, p_time_limit_sec)
+        self.bind("<KeyPress>", lambda e: self.keydown_action(e))
+        self.bind("<KeyRelease>", lambda e: self.keyup_action(e))
 
         self.objects = []
         
