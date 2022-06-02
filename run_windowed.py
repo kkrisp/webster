@@ -23,7 +23,7 @@ root = tk.Tk()
 root.title("Webster")
 root.geometry("700x350")
 
-world = world.World(root, 500, 200)
+world = world.World(root, 500, 200, 100, 30)
 world.Init()
 
 root.protocol("WM_DELETE_WINDOW", lambda: shutdown_procedure(root))

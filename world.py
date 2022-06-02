@@ -1,6 +1,8 @@
 import sys
 import math
+import assets
 import tkinter as tk
+import geometry
 
 class Ticker():
     def __init__(self, p_root_world, p_tick_timed_action, p_tick_duration_ms=100, p_time_limit_sec=30):
@@ -27,18 +29,53 @@ class World(tk.Frame):
         self.ticker = Ticker(p_root, self.Timed_action, p_tick_length_ms, p_time_limit_sec)
         self.bind("<KeyPress>", lambda e: self.Keydown_action(e))
         self.bind("<KeyRelease>", lambda e: self.Keyup_action(e))
-    
+
+        
+        self.canvas=tk.Canvas(self, width=p_width, height=p_height)
+        self.canvas.pack()
+
+        self.player = assets.Player(self.canvas, 10)
+        
+        self.player.position = geometry.Point(20, 20)
+        
     def Init(self):
         self.pack()
         self.focus_set()
         self.ticker.tick()
 
     def Timed_action(self, counter):
-        print("Tick", counter)
+        #print("Tick", counter)
+        self.player.step()
+        self.refresh()
     
     def Keydown_action(self, e):
-        print("{} ({}) pressed".format(e.char, ord(e.char))) 
+        #print("{} ({}) pressed".format(e.char, ord(e.char)))
+        #print ("down", e.char, self.line_x1)
+        if (e.char == 'w'):  # up
+            self.player.status_move = "move"
+            self.player.direction = "up"
+        elif (e.char == 's'): # down
+            self.player.status_move = "move"
+            self.player.direction = "down"
+        elif (e.char == 'a'): # left
+            self.player.status_move = "move"
+            self.player.direction = "left"
+        elif (e.char == 'd'): # right
+            self.player.status_move = "move"
+            self.player.direction = "right"
+        elif (e.char == 'h'): # right
+            self.create_web()
+        else:
+            print("{} ({}) not programmed".format(e.char, ord(e.char)))
     
     def Keyup_action(self, e):
-        print("{} ({}) released".format(e.char, ord(e.char))) 
+        print("{} ({}) released".format(e.char, ord(e.char)))
+        self.player.status_move = "stop"
+    
+    def refresh(self):
+        self.clear()
+        self.player.draw()
+
+    def clear(self):
+        self.canvas.delete("all")
 
