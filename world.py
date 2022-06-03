@@ -94,12 +94,13 @@ class World(tk.Frame):
     
     def refresh(self):
         self.clear()
-        self.ground.draw()
+        # keep drawing order in mind, objects drawn later go on the top 
         self.player.draw()
 
-        if (self.line_in_progress): self.line_in_progress.draw_with_endpoint(self.player.position)
         for single_asset in self.climbable_objects:
             single_asset.draw()
+        
+        if (self.line_in_progress): self.line_in_progress.draw_with_endpoint(self.player.position)
 
     def clear(self):
         self.canvas.delete("all")

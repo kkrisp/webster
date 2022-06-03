@@ -125,7 +125,6 @@ class Player(Asset):
     def select_and_put_on_surface(self, p_surfaces):
         """Changes the player position to the closest point on the surface"""
         for surface in p_surfaces:
-            print(surface.id, self.surface.id)
             if (surface.id != self.surface.id and geometry.is_point_near_a_line(self.position, surface.line, 10)):
                 self.put_on_surface(surface)
                 break
