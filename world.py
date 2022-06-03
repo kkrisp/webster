@@ -1,5 +1,7 @@
 import sys
 import math
+from turtle import bgcolor
+
 import assets
 import tkinter as tk
 import geometry
@@ -31,21 +33,22 @@ class World(tk.Frame):
         self.bind("<KeyRelease>", lambda e: self.keyup_action(e))
 
         self.climbable_objects = []
+        self.climbable_objects = []
         self.next_object_id = 0
         
-        self.canvas=tk.Canvas(self, width=p_width, height=p_height)
+        self.canvas=tk.Canvas(self, width=p_width, height=p_height, bg="#c8dae7")
         self.canvas.pack()
         
         self.ground = assets.Surface(self.next_object_id, self.canvas, geometry.Point(10, 200), geometry.Point(650, 200))
         self.next_object_id += 1
-        self.ground.color = "#476a3f"
-        self.ground.width = 4
+        self.ground.fill = "#476a3f"
+        self.ground.line_width = 4
 
         
         self.wall = assets.Surface(self.next_object_id, self.canvas, geometry.Point(200, 10), geometry.Point(300, 300))
         self.next_object_id += 1
-        self.wall.color = "#476a3f"
-        self.wall.width = 4
+        self.wall.fill = "#476a3f"
+        self.wall.line_width = 4
         
         self.climbable_objects.append(self.wall)
         self.climbable_objects.append(self.ground)
@@ -94,11 +97,13 @@ class World(tk.Frame):
     
     def refresh(self):
         self.clear()
+        self.player.surface.draw("#ffffff", 9)
         # keep drawing order in mind, objects drawn later go on the top 
         self.player.draw()
 
         for single_asset in self.climbable_objects:
             single_asset.draw()
+        
         
         if (self.line_in_progress): self.line_in_progress.draw_with_endpoint(self.player.position)
 
@@ -114,4 +119,3 @@ class World(tk.Frame):
             self.line_in_progress.add_end_point(geometry.Point(self.player.position.x, self.player.position.y))
             self.climbable_objects.append(self.line_in_progress)
             self.line_in_progress = None
-

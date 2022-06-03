@@ -137,8 +137,8 @@ class Surface(Asset):
 
         self.line = geometry.Line()
 
-        self.color = "#aaaaaa"
-        self.width = 3
+        self.fill = "#aaaaaa"
+        self.line_with = 3
 
         self.point_A_exists = False
         self.point_B_exists = False
@@ -155,14 +155,20 @@ class Surface(Asset):
         if (p_surface.point_B_exists):
             self.add_end_point(p_surface.line.end_point)
     
-    def draw(self):
+    def draw(self, p_fill=None, p_width=None):
+        if p_fill: fill = p_fill
+        else: fill = self.fill
+
+        if p_width: line_with = p_width
+        else: line_with = self.line_with
+
         if (self.point_A_exists and self.point_B_exists):
             self.root_canvas.create_line(
                 math.ceil(self.line.start_point.x),
                 math.ceil(self.line.start_point.y),
                 math.ceil(self.line.end_point.x),
                 math.ceil(self.line.end_point.y),
-                fill=self.color, width=self.width)
+                fill=fill, width=line_with)
 
     def add_start_point(self, point_A):
         self.line.set_new_start_point(point_A)
