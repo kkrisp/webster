@@ -124,8 +124,10 @@ class Player(Asset):
     
     def select_and_put_on_surface(self, p_surfaces):
         """Changes the player position to the closest point on the surface"""
-        for surface in p_surfaces:
-            if (surface.id != self.surface.id and geometry.is_point_near_a_line(self.position, surface.line, 10)):
+
+        for i in range(p_surfaces.next_asset_id-1):
+            surface = p_surfaces.next()
+            if (geometry.is_point_near_a_line(self.position, surface.line, 10)):
                 self.put_on_surface(surface)
                 break
 
@@ -186,4 +188,26 @@ class Surface(Asset):
                 point_B.x,
                 point_B.y,
                 fill="#75aebd", width=3)
+
+class Asset_group():
+    def __init__(self):
+        self.asset_list = []
+        self.next_asset_id = 0
+        self.selected_asset_id = 0
+
+    def add(self, p_asset):
+        self.asset_list.append(p_asset)
+        self.next_asset_id += 1
+
+    def next(self, step = 1):
+        next_id = self.selected_asset_id + step
+        if (next_id >= self.next_asset_id):
+            next_id -= self.next_asset_id #not set to next_id=0, in case we want the 2nd or 3rd next
+
+        self.selected_asset_id = next_id
+        return self.asset_list[self.selected_asset_id]
+
+    def draw(self):
+        for asset in self.asset_list:
+            asset.draw()
 

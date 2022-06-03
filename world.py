@@ -32,8 +32,7 @@ class World(tk.Frame):
         self.bind("<KeyPress>", lambda e: self.keydown_action(e))
         self.bind("<KeyRelease>", lambda e: self.keyup_action(e))
 
-        self.climbable_objects = []
-        self.climbable_objects = []
+        self.climbable_objects = assets.Asset_group()
         self.next_object_id = 0
         
         self.canvas=tk.Canvas(self, width=p_width, height=p_height, bg="#c8dae7")
@@ -50,8 +49,8 @@ class World(tk.Frame):
         self.wall.fill = "#476a3f"
         self.wall.line_width = 4
         
-        self.climbable_objects.append(self.wall)
-        self.climbable_objects.append(self.ground)
+        self.climbable_objects.add(self.wall)
+        self.climbable_objects.add(self.ground)
 
         self.player = assets.Player(self.canvas, p_size = 10, p_surface = self.ground)
 
@@ -100,9 +99,7 @@ class World(tk.Frame):
         self.player.surface.draw("#ffffff", 9)
         # keep drawing order in mind, objects drawn later go on the top 
         self.player.draw()
-
-        for single_asset in self.climbable_objects:
-            single_asset.draw()
+        self.climbable_objects.draw()
         
         
         if (self.line_in_progress): self.line_in_progress.draw_with_endpoint(self.player.position)
@@ -117,5 +114,5 @@ class World(tk.Frame):
             self.line_in_progress.add_start_point(geometry.Point(self.player.position.x, self.player.position.y))
         else:
             self.line_in_progress.add_end_point(geometry.Point(self.player.position.x, self.player.position.y))
-            self.climbable_objects.append(self.line_in_progress)
+            self.climbable_objects.add(self.line_in_progress)
             self.line_in_progress = None
